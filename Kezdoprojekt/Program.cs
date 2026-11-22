@@ -23,7 +23,19 @@ namespace KonzolosRajzolo
         static ConsoleColor szin = ConsoleColor.Cyan;
         static bool tollLent = false;
 
+        static bool menuAktiv = false;
+        static int valasztottMenu = 0;
         static string uzenet = "";
+
+        static string[] menuPontok =
+        {
+            "1. Karakter",
+            "2. Szín",
+            "3. Minta (.txt)",
+            "4. Saját 1: Törlés",
+            "5. Saját 2: Középre igazítás",
+            "6. Kilepes"
+        };
 
         static void Main(string[] args)
         {
@@ -54,7 +66,14 @@ namespace KonzolosRajzolo
                 ConsoleKeyInfo bill = Console.ReadKey(true);
                 uzenet = "";
 
-                fut = RajzVezerles(bill);
+                if (menuAktiv == false)
+                {
+                    fut = RajzVezerles(bill);
+                }
+                else
+                {
+                    fut = MenuVezerles(bill);
+                }
             }
 
             Console.ResetColor();
@@ -105,29 +124,56 @@ namespace KonzolosRajzolo
             Console.SetCursorPosition(0, 0);
             Console.Write(" MENÜ");
 
-            Console.SetCursorPosition(1, 2);
-            Console.Write("Pozíció: (" + x + ", " + y + ")");
-
-            Console.SetCursorPosition(1, 3);
-            Console.Write("Karakter: ");
-            Console.ForegroundColor = szin;
-            Console.Write(karakter);
-            Console.ResetColor();
-
-            Console.SetCursorPosition(1, 4);
-            Console.Write("Szín: ");
-            Console.ForegroundColor = szin;
-            Console.Write(szin);
-            Console.ResetColor();
-
-            Console.SetCursorPosition(1, 5);
-            if (tollLent == true)
+            if (menuAktiv == true)
             {
-                Console.Write("Eszköz: letéve");
+                for (int i = 0; i < menuPontok.Length; i++)
+                {
+                    Console.SetCursorPosition(0, 2 + i);
+                    Console.Write("   " + menuPontok[i]);
+                }
+
+                Console.SetCursorPosition(1, 10);
+                Console.Write("Fel/Le: léptet");
+                Console.SetCursorPosition(1, 11);
+                Console.Write("Enter: ok");
+                Console.SetCursorPosition(1, 12);
+                Console.Write("Esc: rajz");
             }
             else
             {
-                Console.Write("Eszköz: felemelve");
+                Console.SetCursorPosition(1, 2);
+                Console.Write("Pozíció: (" + x + ", " + y + ")");
+
+                Console.SetCursorPosition(1, 3);
+                Console.Write("Karakter: ");
+                Console.ForegroundColor = szin;
+                Console.Write(karakter);
+                Console.ResetColor();
+
+                Console.SetCursorPosition(1, 4);
+                Console.Write("Szín: ");
+                Console.ForegroundColor = szin;
+                Console.Write(szin);
+                Console.ResetColor();
+
+                Console.SetCursorPosition(1, 5);
+                if (tollLent == true)
+                {
+                    Console.Write("Eszköz: letéve");
+                }
+                else
+                {
+                    Console.Write("Eszköz: felemelve");
+                }
+
+                Console.SetCursorPosition(1, 7);
+                Console.Write("Nyilak: mozgás");
+                Console.SetCursorPosition(1, 8);
+                Console.Write("Szóköz: toll");
+                Console.SetCursorPosition(1, 9);
+                Console.Write("F1-F12: nyomda");
+                Console.SetCursorPosition(1, 10);
+                Console.Write("M: menü");
             }
 
             if (uzenet != "")
@@ -208,6 +254,11 @@ namespace KonzolosRajzolo
                 }
                 return true;
             }
+            else if (bill.Key == ConsoleKey.M)
+            {
+                menuAktiv = true;
+                return true;
+            }
             else
             {
                 return true;
@@ -215,7 +266,7 @@ namespace KonzolosRajzolo
 
             if (ujX < 0 || ujX >= rajzSzelesseg || ujY < 0 || ujY >= rajzMagassag)
             {
-                Hiba("Elérted a rajzlap szélét!");
+                Hiba("Szelen van!");
                 return true;
             }
 
@@ -226,6 +277,32 @@ namespace KonzolosRajzolo
             {
                 lapKarakter[y, x] = karakter;
                 lapSzin[y, x] = szin;
+            }
+
+            return true;
+        }
+
+        static bool MenuVezerles(ConsoleKeyInfo bill)
+        {
+            if (bill.Key == ConsoleKey.UpArrow)
+            {
+                valasztottMenu--;
+                if (valasztottMenu < 0)
+                {
+                    valasztottMenu = menuPontok.Length - 1;
+                }
+            }
+            else if (bill.Key == ConsoleKey.DownArrow)
+            {
+                valasztottMenu++;
+                if (valasztottMenu >= menuPontok.Length)
+                {
+                    valasztottMenu = 0;
+                }
+            }
+            else if (bill.Key == ConsoleKey.Escape)
+            {
+                menuAktiv = false;
             }
 
             return true;
