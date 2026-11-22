@@ -17,6 +17,14 @@ namespace KonzolosRajzolo
         static char[,] lapKarakter;
         static ConsoleColor[,] lapSzin;
 
+        static int x = 0;
+        static int y = 0;
+        static char karakter = '#';
+        static ConsoleColor szin = ConsoleColor.Cyan;
+        static bool tollLent = false;
+
+        static string uzenet = "";
+
         static void Main(string[] args)
         {
             Console.CursorVisible = false;
@@ -36,6 +44,7 @@ namespace KonzolosRajzolo
 
             UresRajzlap();
             ElvalasztoEsFejlec();
+            BalOldalKirajzolasa();
             RajzlapKirajzolasa();
 
             Console.ReadKey(true);
@@ -71,7 +80,47 @@ namespace KonzolosRajzolo
             }
 
             Console.SetCursorPosition(menuWidth + 2, 0);
-            Console.Write("DRAWING AREA");
+            Console.Write("Rajzlap");
+        }
+
+        static void BalOldalKirajzolasa()
+        {
+            for (int sor = 0; sor < height; sor++)
+            {
+                Console.SetCursorPosition(0, sor);
+                for (int oszlop = 0; oszlop < menuWidth; oszlop++)
+                {
+                    Console.Write(" ");
+                }
+            }
+
+            Console.SetCursorPosition(0, 0);
+            Console.Write(" MENÜ");
+
+            Console.SetCursorPosition(1, 2);
+            Console.Write("Pozíció: (" + x + ", " + y + ")");
+
+            Console.SetCursorPosition(1, 3);
+            Console.Write("Karakter: ");
+            Console.ForegroundColor = szin;
+            Console.Write(karakter);
+            Console.ResetColor();
+
+            Console.SetCursorPosition(1, 4);
+            Console.Write("Szín: ");
+            Console.ForegroundColor = szin;
+            Console.Write(szin);
+            Console.ResetColor();
+
+            Console.SetCursorPosition(1, 5);
+            if (tollLent == true)
+            {
+                Console.Write("Eszköz: letéve");
+            }
+            else
+            {
+                Console.Write("Eszköz: felemelve");
+            }
         }
 
         static void RajzlapKirajzolasa()
@@ -81,9 +130,26 @@ namespace KonzolosRajzolo
                 Console.SetCursorPosition(rajzKezdoX, rajzKezdoY + sor);
                 for (int oszlop = 0; oszlop < rajzSzelesseg; oszlop++)
                 {
-                    Console.ForegroundColor = lapSzin[sor, oszlop];
-                    Console.Write(lapKarakter[sor, oszlop]);
-                    Console.ResetColor();
+                    if (oszlop == x && sor == y)
+                    {
+                        Console.BackgroundColor = ConsoleColor.DarkGray;
+                        Console.ForegroundColor = szin;
+                        if (lapKarakter[sor, oszlop] == ' ')
+                        {
+                            Console.Write("+");
+                        }
+                        else
+                        {
+                            Console.Write(lapKarakter[sor, oszlop]);
+                        }
+                        Console.ResetColor();
+                    }
+                    else
+                    {
+                        Console.ForegroundColor = lapSzin[sor, oszlop];
+                        Console.Write(lapKarakter[sor, oszlop]);
+                        Console.ResetColor();
+                    }
                 }
             }
         }
