@@ -44,10 +44,18 @@ namespace KonzolosRajzolo
 
             UresRajzlap();
             ElvalasztoEsFejlec();
-            BalOldalKirajzolasa();
-            RajzlapKirajzolasa();
 
-            Console.ReadKey(true);
+            bool fut = true;
+            while (fut)
+            {
+                BalOldalKirajzolasa();
+                RajzlapKirajzolasa();
+
+                ConsoleKeyInfo bill = Console.ReadKey(true);
+                uzenet = "";
+
+                fut = RajzVezerles(bill);
+            }
 
             Console.ResetColor();
             Console.Clear();
@@ -80,7 +88,7 @@ namespace KonzolosRajzolo
             }
 
             Console.SetCursorPosition(menuWidth + 2, 0);
-            Console.Write("Rajzlap");
+            Console.Write("RAJZTERÜLET");
         }
 
         static void BalOldalKirajzolasa()
@@ -121,6 +129,21 @@ namespace KonzolosRajzolo
             {
                 Console.Write("Eszköz: felemelve");
             }
+
+            if (uzenet != "")
+            {
+                Console.SetCursorPosition(1, height - 2);
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                if (uzenet.Length > menuWidth - 2)
+                {
+                    Console.Write(uzenet.Substring(0, menuWidth - 2));
+                }
+                else
+                {
+                    Console.Write(uzenet);
+                }
+                Console.ResetColor();
+            }
         }
 
         static void RajzlapKirajzolasa()
@@ -151,6 +174,56 @@ namespace KonzolosRajzolo
                         Console.ResetColor();
                     }
                 }
+            }
+        }
+
+        static bool RajzVezerles(ConsoleKeyInfo bill)
+        {
+            int ujX = x;
+            int ujY = y;
+
+            if (bill.Key == ConsoleKey.UpArrow)
+            {
+                ujY = y - 1;
+            }
+            else if (bill.Key == ConsoleKey.DownArrow)
+            {
+                ujY = y + 1;
+            }
+            else if (bill.Key == ConsoleKey.LeftArrow)
+            {
+                ujX = x - 1;
+            }
+            else if (bill.Key == ConsoleKey.RightArrow)
+            {
+                ujX = x + 1;
+            }
+            else
+            {
+                return true;
+            }
+
+            if (ujX < 0 || ujX >= rajzSzelesseg || ujY < 0 || ujY >= rajzMagassag)
+            {
+                Hiba("Elérted a rajzlap szélét!");
+                return true;
+            }
+
+            x = ujX;
+            y = ujY;
+
+            return true;
+        }
+
+        static void Hiba(string szoveg)
+        {
+            uzenet = szoveg;
+            try
+            {
+                Console.Beep();
+            }
+            catch
+            {
             }
         }
     }
