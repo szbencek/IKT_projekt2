@@ -1,5 +1,6 @@
 
 using System;
+using System.IO;
 
 namespace KonzolosRajzolo
 {
@@ -280,6 +281,18 @@ namespace KonzolosRajzolo
                 menuAktiv = true;
                 return true;
             }
+            else if (bill.Key == ConsoleKey.F1) { Nyomda("X", 3); return true; }
+            else if (bill.Key == ConsoleKey.F2) { Nyomda("X", 5); return true; }
+            else if (bill.Key == ConsoleKey.F3) { Nyomda("X", 7); return true; }
+            else if (bill.Key == ConsoleKey.F4) { Nyomda("KERESZT", 3); return true; }
+            else if (bill.Key == ConsoleKey.F5) { Nyomda("KERESZT", 5); return true; }
+            else if (bill.Key == ConsoleKey.F6) { Nyomda("KERESZT", 7); return true; }
+            else if (bill.Key == ConsoleKey.F7) { Nyomda("NEGYZET", 3); return true; }
+            else if (bill.Key == ConsoleKey.F8) { Nyomda("NEGYZET", 5); return true; }
+            else if (bill.Key == ConsoleKey.F9) { Nyomda("NEGYZET", 7); return true; }
+            else if (bill.Key == ConsoleKey.F10) { Nyomda("ROMBUSZ", 3); return true; }
+            else if (bill.Key == ConsoleKey.F11) { Nyomda("ROMBUSZ", 5); return true; }
+            else if (bill.Key == ConsoleKey.F12) { Nyomda("ROMBUSZ", 7); return true; }
             else
             {
                 return true;
@@ -287,7 +300,7 @@ namespace KonzolosRajzolo
 
             if (ujX < 0 || ujX >= rajzSzelesseg || ujY < 0 || ujY >= rajzMagassag)
             {
-                Hiba("Elérted a rajzlap szélét!");
+                Hiba("A szélén van!");
                 return true;
             }
 
@@ -335,6 +348,11 @@ namespace KonzolosRajzolo
                 else if (valasztottMenu == 1)
                 {
                     SzinValaszto();
+                    menuAktiv = false;
+                }
+                else if (valasztottMenu == 2)
+                {
+                    MintaBetoltes();
                     menuAktiv = false;
                 }
             }
@@ -396,6 +414,58 @@ namespace KonzolosRajzolo
             }
         }
 
+        static void MintaBetoltes()
+        {
+            Console.SetCursorPosition(1, 14);
+            Console.Write("Fájl: ");
+            Console.CursorVisible = true;
+            string fajlNev = Console.ReadLine();
+            Console.CursorVisible = false;
+
+            if (fajlNev == null || fajlNev == "" || File.Exists(fajlNev) == false)
+            {
+                Hiba("Nincs fájl!");
+                return;
+            }
+
+            try
+            {
+                string[] sorok = File.ReadAllLines(fajlNev);
+
+                if (sorok.Length > rajzMagassag)
+                {
+                    Hiba("Túl magas!");
+                    return;
+                }
+
+                for (int i = 0; i < sorok.Length; i++)
+                {
+                    if (sorok[i].Length > rajzSzelesseg)
+                    {
+                        Hiba("Túl széles!");
+                        return;
+                    }
+                }
+
+                UresRajzlap();
+
+                for (int sor = 0; sor < sorok.Length; sor++)
+                {
+                    for (int oszlop = 0; oszlop < sorok[sor].Length; oszlop++)
+                    {
+                        lapKarakter[sor, oszlop] = sorok[sor][oszlop];
+                        lapSzin[sor, oszlop] = szin;
+                    }
+                }
+
+                uzenet = "Betöltve!";
+            }
+            catch
+            {
+                Hiba("Olvasási hiba!");
+            }
+        }
+
         static void Nyomda(string forma, int meret)
         {
             int r = meret / 2;
@@ -420,7 +490,7 @@ namespace KonzolosRajzolo
                     {
                         if (dx == 0 || dy == 0) kellRajzolni = true;
                     }
-                    else if (forma == "NÉGYZET")
+                    else if (forma == "NEGYZET")
                     {
                         if (Math.Abs(dx) == r || Math.Abs(dy) == r) kellRajzolni = true;
                     }
