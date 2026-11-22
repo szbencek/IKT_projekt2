@@ -129,6 +129,21 @@ namespace KonzolosRajzolo
             {
                 Console.Write("Eszköz: felemelve");
             }
+
+            if (uzenet != "")
+            {
+                Console.SetCursorPosition(1, height - 2);
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                if (uzenet.Length > menuWidth - 2)
+                {
+                    Console.Write(uzenet.Substring(0, menuWidth - 2));
+                }
+                else
+                {
+                    Console.Write(uzenet);
+                }
+                Console.ResetColor();
+            }
         }
 
         static void RajzlapKirajzolasa()
@@ -183,18 +198,49 @@ namespace KonzolosRajzolo
             {
                 ujX = x + 1;
             }
+            else if (bill.Key == ConsoleKey.Spacebar)
+            {
+                tollLent = !tollLent;
+                if (tollLent == true)
+                {
+                    lapKarakter[y, x] = karakter;
+                    lapSzin[y, x] = szin;
+                }
+                return true;
+            }
             else
             {
                 return true;
             }
 
-            if (ujX >= 0 && ujX < rajzSzelesseg && ujY >= 0 && ujY < rajzMagassag)
+            if (ujX < 0 || ujX >= rajzSzelesseg || ujY < 0 || ujY >= rajzMagassag)
             {
-                x = ujX;
-                y = ujY;
+                Hiba("Elérted a rajzlap szélét!");
+                return true;
+            }
+
+            x = ujX;
+            y = ujY;
+
+            if (tollLent == true)
+            {
+                lapKarakter[y, x] = karakter;
+                lapSzin[y, x] = szin;
             }
 
             return true;
+        }
+
+        static void Hiba(string szoveg)
+        {
+            uzenet = szoveg;
+            try
+            {
+                Console.Beep();
+            }
+            catch
+            {
+            }
         }
     }
 }
