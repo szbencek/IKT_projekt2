@@ -279,6 +279,18 @@ namespace KonzolosRajzolo
                 menuAktiv = true;
                 return true;
             }
+            else if (bill.Key == ConsoleKey.F1) { Nyomda("X", 3); return true; }
+            else if (bill.Key == ConsoleKey.F2) { Nyomda("X", 5); return true; }
+            else if (bill.Key == ConsoleKey.F3) { Nyomda("X", 7); return true; }
+            else if (bill.Key == ConsoleKey.F4) { Nyomda("KERESZT", 3); return true; }
+            else if (bill.Key == ConsoleKey.F5) { Nyomda("KERESZT", 5); return true; }
+            else if (bill.Key == ConsoleKey.F6) { Nyomda("KERESZT", 7); return true; }
+            else if (bill.Key == ConsoleKey.F7) { Nyomda("NEGYZET", 3); return true; }
+            else if (bill.Key == ConsoleKey.F8) { Nyomda("NEGYZET", 5); return true; }
+            else if (bill.Key == ConsoleKey.F9) { Nyomda("NEGYZET", 7); return true; }
+            else if (bill.Key == ConsoleKey.F10) { Nyomda("ROMBUSZ", 3); return true; }
+            else if (bill.Key == ConsoleKey.F11) { Nyomda("ROMBUSZ", 5); return true; }
+            else if (bill.Key == ConsoleKey.F12) { Nyomda("ROMBUSZ", 7); return true; }
             else
             {
                 return true;
@@ -391,6 +403,48 @@ namespace KonzolosRajzolo
                 else if (k.Key == ConsoleKey.Escape)
                 {
                     break;
+                }
+            }
+        }
+
+        static void Nyomda(string forma, int meret)
+        {
+            int r = meret / 2;
+
+            if (x - r < 0 || x + r >= rajzSzelesseg || y - r < 0 || y + r >= rajzMagassag)
+            {
+                Hiba("Kilóg a rajzlapról!");
+                return;
+            }
+
+            for (int dy = -r; dy <= r; dy++)
+            {
+                for (int dx = -r; dx <= r; dx++)
+                {
+                    bool kellRajzolni = false;
+
+                    if (forma == "X")
+                    {
+                        if (Math.Abs(dx) == Math.Abs(dy)) kellRajzolni = true;
+                    }
+                    else if (forma == "KERESZT")
+                    {
+                        if (dx == 0 || dy == 0) kellRajzolni = true;
+                    }
+                    else if (forma == "NEGYZET")
+                    {
+                        if (Math.Abs(dx) == r || Math.Abs(dy) == r) kellRajzolni = true;
+                    }
+                    else if (forma == "ROMBUSZ")
+                    {
+                        if (Math.Abs(dx) + Math.Abs(dy) == r) kellRajzolni = true;
+                    }
+
+                    if (kellRajzolni == true)
+                    {
+                        lapKarakter[y + dy, x + dx] = karakter;
+                        lapSzin[y + dy, x + dx] = szin;
+                    }
                 }
             }
         }
