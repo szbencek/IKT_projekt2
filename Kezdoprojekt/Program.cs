@@ -119,7 +119,7 @@ namespace KonzolosRajzolo
             }
 
             Console.SetCursorPosition(menuWidth + 2, 0);
-            Console.Write("Rajzlap");
+            Console.Write("RAJZTERÜLET");
         }
 
         static void BalOldalKirajzolasa()
@@ -157,9 +157,9 @@ namespace KonzolosRajzolo
                 Console.SetCursorPosition(1, 10);
                 Console.Write("Fel/Le: léptetés");
                 Console.SetCursorPosition(1, 11);
-                Console.Write("Enter: OK");
+                Console.Write("Enter: kiválasztás");
                 Console.SetCursorPosition(1, 12);
-                Console.Write("Esc: rajz");
+                Console.Write("Esc: vissza a rajzhoz");
             }
             else
             {
@@ -372,7 +372,7 @@ namespace KonzolosRajzolo
             }
             else
             {
-                Hiba("Rossz gomb!");
+                Hiba("Érvénytelen billentyű!");
             }
 
             return true;
@@ -418,7 +418,7 @@ namespace KonzolosRajzolo
                 else if (k.Key == ConsoleKey.Enter)
                 {
                     szin = szinek[idx];
-                    uzenet = "Szín OK!";
+                    uzenet = "Szín beállítva!";
                     break;
                 }
                 else if (k.Key == ConsoleKey.Escape)
@@ -438,7 +438,7 @@ namespace KonzolosRajzolo
 
             if (fajlNev == null || fajlNev == "" || File.Exists(fajlNev) == false)
             {
-                Hiba("Nincs fájl!");
+                Hiba("Nem található a fájl!");
                 return;
             }
 
@@ -448,7 +448,7 @@ namespace KonzolosRajzolo
 
                 if (sorok.Length > rajzMagassag)
                 {
-                    Hiba("Túl magas!");
+                    Hiba("Túl magas a minta!");
                     return;
                 }
 
@@ -456,7 +456,7 @@ namespace KonzolosRajzolo
                 {
                     if (sorok[i].Length > rajzSzelesseg)
                     {
-                        Hiba("Túl széles!");
+                        Hiba("Túl széles a minta!");
                         return;
                     }
                 }
@@ -472,7 +472,7 @@ namespace KonzolosRajzolo
                     }
                 }
 
-                uzenet = "Betöltve!";
+                uzenet = "Sikeres betöltés!";
             }
             catch
             {
@@ -486,7 +486,7 @@ namespace KonzolosRajzolo
 
             if (x - r < 0 || x + r >= rajzSzelesseg || y - r < 0 || y + r >= rajzMagassag)
             {
-                Hiba("Kilóg a lapról!");
+                Hiba("Kilóg a rajzlapról!");
                 return;
             }
 
@@ -526,14 +526,14 @@ namespace KonzolosRajzolo
         {
             lapKarakter[y, x] = ' ';
             lapSzin[y, x] = ConsoleColor.White;
-            uzenet = "Cella törölve.";
+            uzenet = "A cella törölve.";
         }
 
         static void SajatFunkcio2_UgrasKozepre()
         {
             x = rajzSzelesseg / 2;
             y = rajzMagassag / 2;
-            uzenet = "Középre ugrott.";
+            uzenet = "A kurzor középre ugrott.";
         }
 
         static void Hiba(string szoveg)
