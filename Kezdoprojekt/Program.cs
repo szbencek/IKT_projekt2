@@ -130,6 +130,15 @@ namespace KonzolosRajzolo
                 Console.Write("Eszköz: felemelve");
             }
 
+            Console.SetCursorPosition(1, 7);
+            Console.Write("Nyilak: mozgás");
+            Console.SetCursorPosition(1, 8);
+            Console.Write("Szóköz: toll");
+            Console.SetCursorPosition(1, 9);
+            Console.Write("F1-F12: nyomda");
+            Console.SetCursorPosition(1, 10);
+            Console.Write("M: menü");
+
             if (uzenet != "")
             {
                 Console.SetCursorPosition(1, height - 2);
@@ -198,6 +207,16 @@ namespace KonzolosRajzolo
             {
                 ujX = x + 1;
             }
+            else if (bill.Key == ConsoleKey.Spacebar)
+            {
+                tollLent = !tollLent;
+                if (tollLent == true)
+                {
+                    lapKarakter[y, x] = karakter;
+                    lapSzin[y, x] = szin;
+                }
+                return true;
+            }
             else
             {
                 return true;
@@ -211,6 +230,12 @@ namespace KonzolosRajzolo
 
             x = ujX;
             y = ujY;
+
+            if (tollLent == true)
+            {
+                lapKarakter[y, x] = karakter;
+                lapSzin[y, x] = szin;
+            }
 
             return true;
         }
