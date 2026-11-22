@@ -1,64 +1,56 @@
-// Konzolos próbaprogram. Windows Terminalban vagy konzolablakban futtasd.
-Console.OutputEncoding = System.Text.Encoding.UTF8;
+using System;
 
-if (Console.IsInputRedirected || Console.IsOutputRedirected)
+namespace KonzolosRajzolo
 {
-    Console.WriteLine("A próbához nyiss interaktív konzolablakot.");
-    return;
-}
-
-if (Console.WindowWidth < 76 || Console.WindowHeight < 23)
-{
-    Console.WriteLine("Nagyítsd a konzolablakot legalább 76 oszloposra és 23 sorosra.");
-    return;
-}
-
-Console.Clear();
-Console.WriteLine("Konzolpróba | F1: színes jel | B: hang | L: fájl | Esc: kilépés");
-Console.WriteLine("Az alsó sor az utolsó leütött billentyűt mutatja.");
-bool fut = true;
-while (fut)
-{
-    ConsoleKey billentyu = Console.ReadKey(true).Key;
-    Console.SetCursorPosition(0, 20);
-    Console.Write(("Billentyű: " + billentyu).PadRight(75));
-
-    switch (billentyu)
+    class Program
     {
-        case ConsoleKey.F1:
-            Console.SetCursorPosition(26, 4); // oszlop, majd sor
-            Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.Write('#');
+        static int width;
+        static int height;
+        static int menuWidth;
+        static int drawingWidth;
+
+        static int rajzKezdoX;
+        static int rajzKezdoY = 2;
+        static int rajzSzelesseg;
+        static int rajzMagassag;
+
+        static void Main(string[] args)
+        {
+            Console.CursorVisible = false;
+
+            width = Console.WindowWidth;
+            height = Console.WindowHeight;
+
+            if (width < 60) width = 60;
+            if (height < 22) height = 22;
+
+            menuWidth = width / 3;
+            drawingWidth = width - menuWidth;
+
+            rajzKezdoX = menuWidth + 2;
+            rajzSzelesseg = drawingWidth - 3;
+            rajzMagassag = height - rajzKezdoY - 1;
+
+            ElvalasztoEsFejlec();
+            Console.ReadKey(true);
+
             Console.ResetColor();
-            break;
-        case ConsoleKey.B:
-            if (OperatingSystem.IsWindows())
-                Console.Beep(800, 120);
-            else
-                Console.Write("\a");
-            break;
-        case ConsoleKey.L:
-            string utvonal = Path.Combine(AppContext.BaseDirectory, "minta.txt");
-            if (File.Exists(utvonal))
+            Console.Clear();
+            Console.CursorVisible = true;
+        }
+
+        static void ElvalasztoEsFejlec()
+        {
+            Console.Clear();
+
+            for (int sor = 0; sor < height; sor++)
             {
-                string[] sorok = File.ReadAllLines(utvonal);
-                for (int i = 0; i < sorok.Length && i < 5; i++)
-                {
-                    Console.SetCursorPosition(26, 7 + i);
-                    Console.Write(sorok[i]);
-                }
+                Console.SetCursorPosition(menuWidth, sor);
+                Console.Write("|");
             }
-            else
-            {
-                Console.SetCursorPosition(26, 7);
-                Console.Write("A mintafájl nem található.");
-            }
-            break;
-        case ConsoleKey.Escape:
-            fut = false;
-            break;
+
+            Console.SetCursorPosition(menuWidth + 2, 0);
+            Console.Write("Rajzlap");
+        }
     }
 }
-
-Console.SetCursorPosition(0, 21);
-Console.WriteLine("A próba véget ért.");
