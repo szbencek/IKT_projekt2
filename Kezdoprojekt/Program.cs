@@ -35,7 +35,7 @@ namespace KonzolosRajzolo
             "2. Szín",
             "3. Minta (.txt)",
             "4. Saját 1: Törlés",
-            "5. Saját 2: Középre igazítás",
+            "5. Saját 2: Középre ugrás",
             "6. Kilépés"
         };
 
@@ -300,7 +300,7 @@ namespace KonzolosRajzolo
 
             if (ujX < 0 || ujX >= rajzSzelesseg || ujY < 0 || ujY >= rajzMagassag)
             {
-                Hiba("A szélén van!");
+                Hiba("Elérted a rajzlap szélét!");
                 return true;
             }
 
@@ -354,6 +354,20 @@ namespace KonzolosRajzolo
                 {
                     MintaBetoltes();
                     menuAktiv = false;
+                }
+                else if (valasztottMenu == 3)
+                {
+                    SajatFunkcio1_CellaTorles();
+                    menuAktiv = false;
+                }
+                else if (valasztottMenu == 4)
+                {
+                    SajatFunkcio2_UgrasKozepre();
+                    menuAktiv = false;
+                }
+                else if (valasztottMenu == 5)
+                {
+                    return false;
                 }
             }
             else
@@ -506,6 +520,20 @@ namespace KonzolosRajzolo
                     }
                 }
             }
+        }
+
+        static void SajatFunkcio1_CellaTorles()
+        {
+            lapKarakter[y, x] = ' ';
+            lapSzin[y, x] = ConsoleColor.White;
+            uzenet = "Cella törölve.";
+        }
+
+        static void SajatFunkcio2_UgrasKozepre()
+        {
+            x = rajzSzelesseg / 2;
+            y = rajzMagassag / 2;
+            uzenet = "Középre ugrott.";
         }
 
         static void Hiba(string szoveg)
