@@ -14,6 +14,9 @@ namespace KonzolosRajzolo
         static int rajzSzelesseg;
         static int rajzMagassag;
 
+        static char[,] lapKarakter;
+        static ConsoleColor[,] lapSzin;
+
         static void Main(string[] args)
         {
             Console.CursorVisible = false;
@@ -31,12 +34,30 @@ namespace KonzolosRajzolo
             rajzSzelesseg = drawingWidth - 3;
             rajzMagassag = height - rajzKezdoY - 1;
 
+            UresRajzlap();
             ElvalasztoEsFejlec();
+            RajzlapKirajzolasa();
+
             Console.ReadKey(true);
 
             Console.ResetColor();
             Console.Clear();
             Console.CursorVisible = true;
+        }
+
+        static void UresRajzlap()
+        {
+            lapKarakter = new char[rajzMagassag, rajzSzelesseg];
+            lapSzin = new ConsoleColor[rajzMagassag, rajzSzelesseg];
+
+            for (int sor = 0; sor < rajzMagassag; sor++)
+            {
+                for (int oszlop = 0; oszlop < rajzSzelesseg; oszlop++)
+                {
+                    lapKarakter[sor, oszlop] = ' ';
+                    lapSzin[sor, oszlop] = ConsoleColor.White;
+                }
+            }
         }
 
         static void ElvalasztoEsFejlec()
@@ -50,7 +71,21 @@ namespace KonzolosRajzolo
             }
 
             Console.SetCursorPosition(menuWidth + 2, 0);
-            Console.Write("Rajzlap");
+            Console.Write("DRAWING AREA");
+        }
+
+        static void RajzlapKirajzolasa()
+        {
+            for (int sor = 0; sor < rajzMagassag; sor++)
+            {
+                Console.SetCursorPosition(rajzKezdoX, rajzKezdoY + sor);
+                for (int oszlop = 0; oszlop < rajzSzelesseg; oszlop++)
+                {
+                    Console.ForegroundColor = lapSzin[sor, oszlop];
+                    Console.Write(lapKarakter[sor, oszlop]);
+                    Console.ResetColor();
+                }
+            }
         }
     }
 }
