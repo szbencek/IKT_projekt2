@@ -1,3 +1,4 @@
+
 using System;
 
 namespace KonzolosRajzolo
@@ -35,6 +36,16 @@ namespace KonzolosRajzolo
             "4. Saját 1: Törlés",
             "5. Saját 2: Középre igazítás",
             "6. Kilépés"
+        };
+
+        static ConsoleColor[] szinek =
+        {
+            ConsoleColor.White,
+            ConsoleColor.Cyan,
+            ConsoleColor.Green,
+            ConsoleColor.Yellow,
+            ConsoleColor.Red,
+            ConsoleColor.Magenta
         };
 
         static void Main(string[] args)
@@ -143,9 +154,9 @@ namespace KonzolosRajzolo
                 }
 
                 Console.SetCursorPosition(1, 10);
-                Console.Write("Fel/Le: léptet");
+                Console.Write("Fel/Le: léptetés");
                 Console.SetCursorPosition(1, 11);
-                Console.Write("Enter: ok");
+                Console.Write("Enter: OK");
                 Console.SetCursorPosition(1, 12);
                 Console.Write("Esc: rajz");
             }
@@ -321,6 +332,11 @@ namespace KonzolosRajzolo
                     KarakterValaszto();
                     menuAktiv = false;
                 }
+                else if (valasztottMenu == 1)
+                {
+                    SzinValaszto();
+                    menuAktiv = false;
+                }
             }
             else
             {
@@ -343,6 +359,82 @@ namespace KonzolosRajzolo
             else
             {
                 Hiba("Hibás jel!");
+            }
+        }
+
+        static void SzinValaszto()
+        {
+            int idx = 0;
+            while (true)
+            {
+                Console.SetCursorPosition(1, 14);
+                Console.ForegroundColor = szinek[idx];
+                Console.Write("Szín: " + szinek[idx] + "     ");
+                Console.ResetColor();
+
+                ConsoleKeyInfo k = Console.ReadKey(true);
+                if (k.Key == ConsoleKey.LeftArrow || k.Key == ConsoleKey.UpArrow)
+                {
+                    idx--;
+                    if (idx < 0) idx = szinek.Length - 1;
+                }
+                else if (k.Key == ConsoleKey.RightArrow || k.Key == ConsoleKey.DownArrow)
+                {
+                    idx++;
+                    if (idx >= szinek.Length) idx = 0;
+                }
+                else if (k.Key == ConsoleKey.Enter)
+                {
+                    szin = szinek[idx];
+                    uzenet = "Szín OK!";
+                    break;
+                }
+                else if (k.Key == ConsoleKey.Escape)
+                {
+                    break;
+                }
+            }
+        }
+
+        static void Nyomda(string forma, int meret)
+        {
+            int r = meret / 2;
+
+            if (x - r < 0 || x + r >= rajzSzelesseg || y - r < 0 || y + r >= rajzMagassag)
+            {
+                Hiba("Kilóg a lapról!");
+                return;
+            }
+
+            for (int dy = -r; dy <= r; dy++)
+            {
+                for (int dx = -r; dx <= r; dx++)
+                {
+                    bool kellRajzolni = false;
+
+                    if (forma == "X")
+                    {
+                        if (Math.Abs(dx) == Math.Abs(dy)) kellRajzolni = true;
+                    }
+                    else if (forma == "KERESZT")
+                    {
+                        if (dx == 0 || dy == 0) kellRajzolni = true;
+                    }
+                    else if (forma == "NÉGYZET")
+                    {
+                        if (Math.Abs(dx) == r || Math.Abs(dy) == r) kellRajzolni = true;
+                    }
+                    else if (forma == "ROMBUSZ")
+                    {
+                        if (Math.Abs(dx) + Math.Abs(dy) == r) kellRajzolni = true;
+                    }
+
+                    if (kellRajzolni == true)
+                    {
+                        lapKarakter[y + dy, x + dx] = karakter;
+                        lapSzin[y + dy, x + dx] = szin;
+                    }
+                }
             }
         }
 
