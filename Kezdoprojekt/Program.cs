@@ -37,6 +37,16 @@ namespace KonzolosRajzolo
             "6. Kilépés"
         };
 
+        static ConsoleColor[] szinek =
+        {
+            ConsoleColor.White,
+            ConsoleColor.Cyan,
+            ConsoleColor.Green,
+            ConsoleColor.Yellow,
+            ConsoleColor.Red,
+            ConsoleColor.Magenta
+        };
+
         static void Main(string[] args)
         {
             Console.CursorVisible = false;
@@ -316,7 +326,16 @@ namespace KonzolosRajzolo
             }
             else if (bill.Key == ConsoleKey.Enter)
             {
-                // A menupontok muveletei a kesobbi commitokban bovulnek
+                if (valasztottMenu == 0)
+                {
+                    KarakterValaszto();
+                    menuAktiv = false;
+                }
+                else if (valasztottMenu == 1)
+                {
+                    SzinValaszto();
+                    menuAktiv = false;
+                }
             }
             else
             {
@@ -324,6 +343,56 @@ namespace KonzolosRajzolo
             }
 
             return true;
+        }
+
+        static void KarakterValaszto()
+        {
+            Console.SetCursorPosition(1, 14);
+            Console.Write("Új jel: ");
+            ConsoleKeyInfo k = Console.ReadKey(true);
+            if (k.KeyChar != '\0' && k.KeyChar != ' ' && !char.IsControl(k.KeyChar))
+            {
+                karakter = k.KeyChar;
+                uzenet = "Karakter: " + karakter;
+            }
+            else
+            {
+                Hiba("Hibás jel!");
+            }
+        }
+
+        static void SzinValaszto()
+        {
+            int idx = 0;
+            while (true)
+            {
+                Console.SetCursorPosition(1, 14);
+                Console.ForegroundColor = szinek[idx];
+                Console.Write("Szín: " + szinek[idx] + "     ");
+                Console.ResetColor();
+
+                ConsoleKeyInfo k = Console.ReadKey(true);
+                if (k.Key == ConsoleKey.LeftArrow || k.Key == ConsoleKey.UpArrow)
+                {
+                    idx--;
+                    if (idx < 0) idx = szinek.Length - 1;
+                }
+                else if (k.Key == ConsoleKey.RightArrow || k.Key == ConsoleKey.DownArrow)
+                {
+                    idx++;
+                    if (idx >= szinek.Length) idx = 0;
+                }
+                else if (k.Key == ConsoleKey.Enter)
+                {
+                    szin = szinek[idx];
+                    uzenet = "Szín beállítva!";
+                    break;
+                }
+                else if (k.Key == ConsoleKey.Escape)
+                {
+                    break;
+                }
+            }
         }
 
         static void Hiba(string szoveg)
