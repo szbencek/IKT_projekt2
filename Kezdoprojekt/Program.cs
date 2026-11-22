@@ -34,7 +34,7 @@ namespace KonzolosRajzolo
             "3. Minta (.txt)",
             "4. Saját 1: Törlés",
             "5. Saját 2: Középre igazítás",
-            "6. Kilepes"
+            "6. Kilépés"
         };
 
         static void Main(string[] args)
@@ -129,7 +129,17 @@ namespace KonzolosRajzolo
                 for (int i = 0; i < menuPontok.Length; i++)
                 {
                     Console.SetCursorPosition(0, 2 + i);
-                    Console.Write("   " + menuPontok[i]);
+                    if (i == valasztottMenu)
+                    {
+                        Console.BackgroundColor = ConsoleColor.Gray;
+                        Console.ForegroundColor = ConsoleColor.Black;
+                        Console.Write(" > " + menuPontok[i]);
+                        Console.ResetColor();
+                    }
+                    else
+                    {
+                        Console.Write("   " + menuPontok[i]);
+                    }
                 }
 
                 Console.SetCursorPosition(1, 10);
@@ -266,7 +276,7 @@ namespace KonzolosRajzolo
 
             if (ujX < 0 || ujX >= rajzSzelesseg || ujY < 0 || ujY >= rajzMagassag)
             {
-                Hiba("Szelen van!");
+                Hiba("Elérted a rajzlap szélét!");
                 return true;
             }
 
@@ -304,8 +314,36 @@ namespace KonzolosRajzolo
             {
                 menuAktiv = false;
             }
+            else if (bill.Key == ConsoleKey.Enter)
+            {
+                if (valasztottMenu == 0)
+                {
+                    KarakterValaszto();
+                    menuAktiv = false;
+                }
+            }
+            else
+            {
+                Hiba("Rossz gomb!");
+            }
 
             return true;
+        }
+
+        static void KarakterValaszto()
+        {
+            Console.SetCursorPosition(1, 14);
+            Console.Write("Új jel: ");
+            ConsoleKeyInfo k = Console.ReadKey(true);
+            if (k.KeyChar != '\0' && k.KeyChar != ' ' && !char.IsControl(k.KeyChar))
+            {
+                karakter = k.KeyChar;
+                uzenet = "Karakter: " + karakter;
+            }
+            else
+            {
+                Hiba("Hibás jel!");
+            }
         }
 
         static void Hiba(string szoveg)
