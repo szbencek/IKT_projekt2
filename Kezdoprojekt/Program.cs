@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 
 namespace KonzolosRajzolo
 {
@@ -348,6 +349,21 @@ namespace KonzolosRajzolo
                     SzinValaszto();
                     menuAktiv = false;
                 }
+                else if (valasztottMenu == 2)
+                {
+                    MintaBetoltes();
+                    menuAktiv = false;
+                }
+                else if (valasztottMenu == 3)
+                {
+                    SajatFunkcio1_CellaTorles();
+                    menuAktiv = false;
+                }
+                else if (valasztottMenu == 4)
+                {
+                    SajatFunkcio2_UgrasKozepre();
+                    menuAktiv = false;
+                }
             }
             else
             {
@@ -407,6 +423,58 @@ namespace KonzolosRajzolo
             }
         }
 
+        static void MintaBetoltes()
+        {
+            Console.SetCursorPosition(1, 14);
+            Console.Write("Fájl: ");
+            Console.CursorVisible = true;
+            string fajlNev = Console.ReadLine();
+            Console.CursorVisible = false;
+
+            if (fajlNev == null || fajlNev == "" || File.Exists(fajlNev) == false)
+            {
+                Hiba("Nem található a fájl!");
+                return;
+            }
+
+            try
+            {
+                string[] sorok = File.ReadAllLines(fajlNev);
+
+                if (sorok.Length > rajzMagassag)
+                {
+                    Hiba("Túl magas a minta!");
+                    return;
+                }
+
+                for (int i = 0; i < sorok.Length; i++)
+                {
+                    if (sorok[i].Length > rajzSzelesseg)
+                    {
+                        Hiba("Túl széles a minta!");
+                        return;
+                    }
+                }
+
+                UresRajzlap();
+
+                for (int sor = 0; sor < sorok.Length; sor++)
+                {
+                    for (int oszlop = 0; oszlop < sorok[sor].Length; oszlop++)
+                    {
+                        lapKarakter[sor, oszlop] = sorok[sor][oszlop];
+                        lapSzin[sor, oszlop] = szin;
+                    }
+                }
+
+                uzenet = "Sikeres betöltés!";
+            }
+            catch
+            {
+                Hiba("Olvasási hiba!");
+            }
+        }
+
         static void Nyomda(string forma, int meret)
         {
             int r = meret / 2;
@@ -447,6 +515,20 @@ namespace KonzolosRajzolo
                     }
                 }
             }
+        }
+
+        static void SajatFunkcio1_CellaTorles()
+        {
+            lapKarakter[y, x] = ' ';
+            lapSzin[y, x] = ConsoleColor.White;
+            uzenet = "A cella törölve.";
+        }
+
+        static void SajatFunkcio2_UgrasKozepre()
+        {
+            x = rajzSzelesseg / 2;
+            y = rajzMagassag / 2;
+            uzenet = "A kurzor középre ugrott.";
         }
 
         static void Hiba(string szoveg)
